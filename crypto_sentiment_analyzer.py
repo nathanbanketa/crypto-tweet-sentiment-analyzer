@@ -104,7 +104,7 @@ print(f"Total tweets fetched: {len(all_tweets)}")
 # =============================================================================
 
 # Create DataFrame
-df = pd.DataFrame(all_tweets, columns=['text', 'created_at', 'username'])  # type: ignore
+df = pd.DataFrame(all_tweets, columns=['text', 'created_at', 'username'])
 df['created_at'] = pd.to_datetime(df['created_at'])
 
 def clean_tweet(text):
@@ -135,11 +135,11 @@ def get_sentiment(text):
     return scores
 
 # Apply sentiment analysis
-sentiment_scores = df['cleaned_text'].apply(get_sentiment)  # type: ignore
-df['compound_sentiment'] = sentiment_scores.apply(lambda x: x['compound'])  # type: ignore
-df['positive_sentiment'] = sentiment_scores.apply(lambda x: x['pos'])  # type: ignore
-df['negative_sentiment'] = sentiment_scores.apply(lambda x: x['neg'])  # type: ignore
-df['neutral_sentiment'] = sentiment_scores.apply(lambda x: x['neu'])  # type: ignore
+sentiment_scores = df['cleaned_text'].apply(get_sentiment)
+df['compound_sentiment'] = sentiment_scores.apply(lambda x: x['compound'])
+df['positive_sentiment'] = sentiment_scores.apply(lambda x: x['pos'])
+df['negative_sentiment'] = sentiment_scores.apply(lambda x: x['neg'])
+df['neutral_sentiment'] = sentiment_scores.apply(lambda x: x['neu'])
 
 # Add sentiment category
 def categorize_sentiment(compound):
@@ -150,10 +150,10 @@ def categorize_sentiment(compound):
     else:
         return 'Neutral'
 
-df['sentiment_category'] = df['compound_sentiment'].apply(categorize_sentiment)  # type: ignore
+df['sentiment_category'] = df['compound_sentiment'].apply(categorize_sentiment)
 
 print("Sentiment Analysis Complete!")
-print(df[['username', 'cleaned_text', 'compound_sentiment', 'sentiment_category']].head())  # type: ignore
+print(df[['username', 'cleaned_text', 'compound_sentiment', 'sentiment_category']].head())
 
 # =============================================================================
 # 8. VISUALIZATIONS
@@ -163,24 +163,24 @@ print(df[['username', 'cleaned_text', 'compound_sentiment', 'sentiment_category'
 plt.figure(figsize=(15, 10))
 
 plt.subplot(2, 2, 1)
-sentiment_counts = df['sentiment_category'].value_counts()  # type: ignore
+sentiment_counts = df['sentiment_category'].value_counts()
 colors = ['#2E8B57', '#FF6B6B', '#4682B4']
-plt.pie(sentiment_counts.values, labels=sentiment_counts.index, autopct='%1.1f%%', colors=colors)  # type: ignore
+plt.pie(sentiment_counts.values, labels=sentiment_counts.index, autopct='%1.1f%%', colors=colors)
 plt.title('Overall Sentiment Distribution', fontsize=14, fontweight='bold')
 
 # 2. Sentiment by user
 plt.subplot(2, 2, 2)
-user_sentiment = df.groupby('username')['compound_sentiment'].mean().sort_values()  # type: ignore
-bars = plt.bar(range(len(user_sentiment)), user_sentiment.values,   # type: ignore
+user_sentiment = df.groupby('username')['compound_sentiment'].mean().sort_values()
+bars = plt.bar(range(len(user_sentiment)), user_sentiment.values, 
                color=['red' if x < 0 else 'green' if x > 0 else 'gray' for x in user_sentiment.values])
-plt.xticks(range(len(user_sentiment)), user_sentiment.index, rotation=45)  # type: ignore
+plt.xticks(range(len(user_sentiment)), user_sentiment.index, rotation=45)
 plt.title('Average Sentiment by User', fontsize=14, fontweight='bold')
 plt.ylabel('Compound Sentiment Score')
 plt.axhline(y=0, color='black', linestyle='--', alpha=0.5)
 
 # 3. Sentiment over time
 plt.subplot(2, 2, 3)
-df_sorted = df.sort_values('created_at')  # type: ignore
+df_sorted = df.sort_values('created_at')
 plt.scatter(df_sorted['created_at'], df_sorted['compound_sentiment'], 
            alpha=0.6, c=df_sorted['compound_sentiment'], cmap='RdYlGn')
 plt.title('Sentiment Over Time', fontsize=14, fontweight='bold')
@@ -298,4 +298,4 @@ print(f"Date range: {df['created_at'].min()} to {df['created_at'].max()}")
 print(f"Overall sentiment: {df['compound_sentiment'].mean():.3f}")
 print(f"Crypto-related tweets: {len(crypto_tweets)}")
 
-print("\nAnalysis complete! Check the generated visualizations and CSV file.")
+print("\nAnalysis complete! Check the generated visualizations and CSV file.") 
