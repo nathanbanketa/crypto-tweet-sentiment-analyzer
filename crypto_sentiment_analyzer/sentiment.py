@@ -2,23 +2,15 @@
 # 7. SENTIMENT ANALYSIS
 # =============================================================================
 
-# Initialize sentiment analyzer
-analyzer = SentimentIntensityAnalyzer()
+# Requires: pip install vaderSentiment
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-# Analyze sentiment
 def get_sentiment(text):
     """Get sentiment scores for text"""
+    analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(text)
     return scores
 
-# Apply sentiment analysis
-sentiment_scores = df['cleaned_text'].apply(get_sentiment)  # type: ignore
-df['compound_sentiment'] = sentiment_scores.apply(lambda x: x['compound'])  # type: ignore
-df['positive_sentiment'] = sentiment_scores.apply(lambda x: x['pos'])  # type: ignore
-df['negative_sentiment'] = sentiment_scores.apply(lambda x: x['neg'])  # type: ignore
-df['neutral_sentiment'] = sentiment_scores.apply(lambda x: x['neu'])  # type: ignore
-
-# Add sentiment category
 def categorize_sentiment(compound):
     if compound >= 0.05:
         return 'Positive'
@@ -27,7 +19,13 @@ def categorize_sentiment(compound):
     else:
         return 'Neutral'
 
-df['sentiment_category'] = df['compound_sentiment'].apply(categorize_sentiment)  # type: ignore
-
-print("Sentiment Analysis Complete!")
-print(df[['username', 'cleaned_text', 'compound_sentiment', 'sentiment_category']].head())  # type: ignore
+def analyze_sentiment(df):
+    """Takes a DataFrame, adds sentiment columns, and returns the DataFrame."""
+    analyzer = SentimentIntensityAnalyzer()
+    sentiment_scores = df['cleaned_text'].apply(lambda text: analyzer.polarity_scores(text))
+    df['compound_sentiment'] = sentiment_scores.apply(lambda x: x['compound'])
+    df['positive_sentiment'] = sentiment_scores.apply(lambda x: x['pos'])
+    df['negative_sentiment'] = sentiment_scores.apply(lambda x: x['neg'])
+    df['neutral_sentiment'] = sentiment_scores.apply(lambda x: x['neu'])
+    df['sentiment_category'] = df['compound_sentiment'].apply(categorize_sentiment)
+    return df

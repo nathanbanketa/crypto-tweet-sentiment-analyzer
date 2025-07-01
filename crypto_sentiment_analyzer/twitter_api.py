@@ -1,3 +1,6 @@
+import requests
+import time
+
 # =============================================================================
 # TWITTER API AUTHENTICATION
 # =============================================================================
@@ -33,19 +36,17 @@ def get_user_id(username):
         print(f"Error getting user ID for {username}: {response.status_code}")
         return None
 
-# Get user IDs
-user_ids = {}
-for username in usernames:
-    user_id = get_user_id(username)
-    if user_id:
-        user_ids[username] = user_id
-    time.sleep(1)  # Rate limiting
 
-print("User IDs:", user_ids)
+def get_user_ids(usernames):
+    """Get user IDs for a list of usernames. Returns dict {username: user_id}"""
+    user_ids = {}
+    for username in usernames:
+        user_id = get_user_id(username)
+        if user_id:
+            user_ids[username] = user_id
+        time.sleep(1)  # Rate limiting
+    return user_ids
 
-# =============================================================================
-# 5. FETCH TWEETS
-# =============================================================================
 
 def fetch_tweets(user_id, username, max_results=10):
     """Fetch tweets for a specific user"""
@@ -63,12 +64,13 @@ def fetch_tweets(user_id, username, max_results=10):
         print(f"Error fetching tweets for {username}: {response.status_code}")
         return []
 
-# Fetch tweets for all users
-all_tweets = []
-for username, user_id in user_ids.items():
-    print(f"Fetching tweets for {username}...")
-    tweets = fetch_tweets(user_id, username)
-    all_tweets.extend(tweets)
-    time.sleep(2)  # Rate limiting
 
-print(f"Total tweets fetched: {len(all_tweets)}")
+def fetch_all_tweets(user_ids, max_results=10):
+    """Fetch tweets for all users in user_ids dict. Returns list of (text, created_at, username)"""
+    all_tweets = []
+    for username, user_id in user_ids.items():
+        print(f"Fetching tweets for {username}...")
+        tweets = fetch_tweets(user_id, username, max_results=max_results)
+        all_tweets.extend(tweets)
+        time.sleep(2)  # Rate limiting
+    return all_tweets
