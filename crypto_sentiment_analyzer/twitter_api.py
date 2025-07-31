@@ -1,12 +1,14 @@
 import requests
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv
+BEARER_TOKEN = os.getenv("API_KEY")
 
 # =============================================================================
 # TWITTER API AUTHENTICATION
 # =============================================================================
-
-BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAEl72QEAAAAA%2FLoqTtdehu8qkfZY1oqZB6Rz6yg%3DMI0YdLTx5GH0RB3tjMfi7DqTB4GNFyie8RYEZtC6J22beoFxgd"
-
 headers = {
     'Authorization': f'Bearer {BEARER_TOKEN}',
     'User-Agent': 'CryptoSentimentBot/1.0'
@@ -15,14 +17,14 @@ headers = {
 print("API headers configured!")
 
 # =============================================================================
-# 3. TARGET CRYPTO ACCOUNTS
+# TARGET CRYPTO ACCOUNTS
 # =============================================================================
 
 usernames = ["cz_binance", "elonmusk", "jack", "saylor", "VitalikButerin", "michael_saylor"]
 print(f"Targeting {len(usernames)} crypto influencers: {usernames}")
 
 # =============================================================================
-# 4. GET USER IDS FROM USERNAMES
+# GET USER IDS FROM USERNAMES
 # =============================================================================
 
 def get_user_id(username):
