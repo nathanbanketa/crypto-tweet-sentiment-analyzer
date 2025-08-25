@@ -20,7 +20,7 @@ print("API headers configured!")
 # TARGET CRYPTO ACCOUNTS
 # =============================================================================
 
-usernames = ["cz_binance", "elonmusk", "jack", "saylor", "VitalikButerin", "michael_saylor"]
+usernames = ["cz_binance", "BTCTN"]
 print(f"Targeting {len(usernames)} crypto influencers: {usernames}")
 
 # =============================================================================
